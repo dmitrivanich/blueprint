@@ -21,23 +21,37 @@ func drawVector(_ vector: Memory.Vector) -> VectorShape {
     pathToLine.addLine(to: vector.end)
 
     line.path = pathToLine
-    line.strokeColor = vector.color
-    line.lineWidth = 3
-    line.zPosition = 2
+    line.strokeColor = vector.chosen ? .red : vector.color
+    line.lineWidth = vector.chosen ? 10 : 3
+    line.zPosition = 5
     
-    let triangle = getTriangle(from: vector.start, to: vector.end, color: vector.color)
+    let triangle = getTriangle(from: vector.start, to: vector.end, color: vector.chosen ? .red : vector.color)
 
     return VectorShape(line: line, triangle: triangle)
+}
+
+func subtractFromVector(p1:CGPoint, p2:CGPoint,minLenght: CGFloat) -> CGPoint {
+    let maxLength = sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2))
+    let precent = minLenght / maxLength
+    
+
+    var vectorEndPointWithoutTriangleWidth = CGPoint(
+        x:  ((1 - precent) * p2.x ) + p1.x * precent,
+        y:  ((1 - precent) * p2.y ) + p1.y * precent
+    )
+    
+    return vectorEndPointWithoutTriangleWidth
+                
 }
 
 func getTriangle(from start:CGPoint, to end:CGPoint, color: UIColor) -> SKShapeNode {
     let triangleWidth: CGFloat = 10
     let triangleHeight: CGFloat = 30
     
-    let triangleStartPoint = CGPoint(
-        x: start.x,
-        y: end.y
-    )
+    
+    let vectorEndPointWithoutTriangleWidth = subtractFromVector(p1: start, p2: end, minLenght: triangleWidth)
+    
+    let triangleStartPoint = vectorEndPointWithoutTriangleWidth
     
     let triangleLeftPoint = CGPoint(
         x: triangleStartPoint.x - triangleHeight,
@@ -61,7 +75,7 @@ func getTriangle(from start:CGPoint, to end:CGPoint, color: UIColor) -> SKShapeN
 
     let triangle = SKShapeNode(path: trianglePath, centered: true)
 
-    triangle.position = end
+    triangle.position = vectorEndPointWithoutTriangleWidth
     triangle.strokeColor = color
     triangle.lineWidth = 3
     triangle.fillColor = color

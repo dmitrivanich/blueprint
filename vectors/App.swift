@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 @main
 struct vectorsApp: App {
-    let game = VectorsGame()
     @StateObject private var dataController = DataController()
+    let game = VectorsGame()
     
     var body: some Scene {
         WindowGroup {

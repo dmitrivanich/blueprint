@@ -11,12 +11,12 @@
 		CE1235112927D54F00C969BF /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1235102927D54F00C969BF /* AppView.swift */; };
 		CE1235132927D55200C969BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE1235122927D55200C969BF /* Assets.xcassets */; };
 		CE1235162927D55200C969BF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE1235152927D55200C969BF /* Preview Assets.xcassets */; };
-		CE12351B2927D55200C969BF /* vectors.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE1235192927D55200C969BF /* vectors.xcdatamodeld */; };
 		CE1E2E88292A62B4006727A5 /* AppViewSKScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E2E87292A62B4006727A5 /* AppViewSKScene.swift */; };
 		CE1E2E8A292AA117006727A5 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E2E89292AA117006727A5 /* AppModel.swift */; };
 		CE45318F292BF563006FB05D /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45318E292BF563006FB05D /* AppController.swift */; };
 		CE479DF32928023D005CE0EE /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE479DF22928023C005CE0EE /* SpriteKit.framework */; };
-		CEE17FDA292EC4EA00C6BA24 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE17FD9292EC4E900C6BA24 /* DataController.swift */; };
+		CEBC400329303E7B00B4A648 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC400229303E7B00B4A648 /* DataController.swift */; };
+		CEBCF307292FF7AE0050CA06 /* VectorData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF305292FF7AE0050CA06 /* VectorData.xcdatamodeld */; };
 		CEF739F8292AC90B000204D5 /* UIColorExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF739F7292AC90B000204D5 /* UIColorExtention.swift */; };
 		CEF739FA292B08D8000204D5 /* drawVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF739F9292B08D8000204D5 /* drawVector.swift */; };
 /* End PBXBuildFile section */
@@ -27,12 +27,12 @@
 		CE1235102927D54F00C969BF /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		CE1235122927D55200C969BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE1235152927D55200C969BF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		CE12351A2927D55200C969BF /* vectors.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = vectors.xcdatamodel; sourceTree = "<group>"; };
 		CE1E2E87292A62B4006727A5 /* AppViewSKScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewSKScene.swift; sourceTree = "<group>"; };
 		CE1E2E89292AA117006727A5 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		CE45318E292BF563006FB05D /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		CE479DF22928023C005CE0EE /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
-		CEE17FD9292EC4E900C6BA24 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		CEBC400229303E7B00B4A648 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		CEBCF306292FF7AE0050CA06 /* VectorData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VectorData.xcdatamodel; sourceTree = "<group>"; };
 		CEF739F7292AC90B000204D5 /* UIColorExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtention.swift; sourceTree = "<group>"; };
 		CEF739F9292B08D8000204D5 /* drawVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = drawVector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,8 +109,8 @@
 		CEE17FDB292EC4F000C6BA24 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				CE1235192927D55200C969BF /* vectors.xcdatamodeld */,
-				CEE17FD9292EC4E900C6BA24 /* DataController.swift */,
+				CEBCF305292FF7AE0050CA06 /* VectorData.xcdatamodeld */,
+				CEBC400229303E7B00B4A648 /* DataController.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -198,10 +198,10 @@
 				CE1E2E8A292AA117006727A5 /* AppModel.swift in Sources */,
 				CEF739F8292AC90B000204D5 /* UIColorExtention.swift in Sources */,
 				CE1E2E88292A62B4006727A5 /* AppViewSKScene.swift in Sources */,
-				CEE17FDA292EC4EA00C6BA24 /* DataController.swift in Sources */,
+				CEBC400329303E7B00B4A648 /* DataController.swift in Sources */,
+				CEBCF307292FF7AE0050CA06 /* VectorData.xcdatamodeld in Sources */,
 				CE1235112927D54F00C969BF /* AppView.swift in Sources */,
 				CE45318F292BF563006FB05D /* AppController.swift in Sources */,
-				CE12351B2927D55200C969BF /* vectors.xcdatamodeld in Sources */,
 				CE12350F2927D54F00C969BF /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,7 +338,6 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -367,7 +366,6 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -405,13 +403,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		CE1235192927D55200C969BF /* vectors.xcdatamodeld */ = {
+		CEBCF305292FF7AE0050CA06 /* VectorData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				CE12351A2927D55200C969BF /* vectors.xcdatamodel */,
+				CEBCF306292FF7AE0050CA06 /* VectorData.xcdatamodel */,
 			);
-			currentVersion = CE12351A2927D55200C969BF /* vectors.xcdatamodel */;
-			path = vectors.xcdatamodeld;
+			currentVersion = CEBCF306292FF7AE0050CA06 /* VectorData.xcdatamodel */;
+			path = VectorData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
