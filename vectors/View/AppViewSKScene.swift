@@ -1,10 +1,3 @@
-//
-//  SceneView.swift
-//  vectors
-//
-//  Created by User on 20.11.22.
-//
-
 import SwiftUI
 import SpriteKit
 import CoreData
@@ -14,10 +7,16 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     
     @Binding var currentStatus: GameStatus
     
+    var selectedNodes:[UITouch:SKSpriteNode] = [:]
+    
     var touchLocation: CGPoint = .zero
+    var isMultiTouch: Bool = false
+    var lengthBetweenTouches: CGFloat = .zero
+    var startLengthBetweenTouches: CGFloat = .zero
     var viewModel: VectorsGame? = VectorsGame()
     var gridCellSize: CGFloat = 50
 
+    
     var chosenVector: Memory.Vector = Memory.Vector(id: -1, start: .zero, end: .zero, color: .black)
     var isLongPress: Bool = false
     
@@ -28,7 +27,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     let yLine = SKSpriteNode(color: UIColor(.white), size: .zero)
     let xyCenter = SKShapeNode(circleOfRadius: 10)
     
-    var cameraNode = SKCameraNode()
+    var cameraNode : SKCameraNode = SKCameraNode()
     let cameraCenter = SKShapeNode(circleOfRadius: 5)
     let staticCameraCenter = SKShapeNode(circleOfRadius: 5)
     let centerToCameraLine = SKShapeNode()
@@ -46,8 +45,9 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
             width: UIScreen.main.bounds.width * 2,
             height: UIScreen.main.bounds.height * 2))
         self.scaleMode = .fill
+        
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         _currentStatus = .constant(.enableCamera)
         super.init(coder: aDecoder)
@@ -66,7 +66,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
            (camera!.position.y < halfGridCellSize) && (camera!.position.y > -halfGridCellSize)) {
             
             leadCameraToCenter(speed: speed)
-
+            
         }
     }
     
@@ -83,7 +83,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
                  redrawVectorLine()
              }
          }
-         if sender.state == .ended { print("LongPress ENDED detected")
+         if sender.state == .ended {
              isLongPress = false
              vectorLine.alpha = 1
              
@@ -96,24 +96,28 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        var touchLocations: [CGPoint] = []
+        
         for touch in touches{
-            
             touchLocation = touch.location(in: self)
+            touchLocations.append(touch.location(in: self))
             
-            if(!currentStatus.isVectorCreating) {
-               
-                
-               
-            } else {
-                
-                vectorCircle.position = touchLocation
-                vectorCircle.alpha = 1
-                vectorLine.alpha = 1
-                
-                startOfVector = CGPoint(
-                    x: round(touchLocation.x / gridCellSize) * gridCellSize,
-                    y: round(touchLocation.y / gridCellSize) * gridCellSize
-                )
+        }
+
+        if touchLocations.count < 2 {
+            for touch in touches{
+
+                if(currentStatus.isVectorCreating) {
+                    vectorCircle.position = touchLocation
+                    vectorCircle.alpha = 1
+                    vectorLine.alpha = 1
+                    
+                    startOfVector = CGPoint(
+                        x: round(touchLocation.x / gridCellSize) * gridCellSize,
+                        y: round(touchLocation.y / gridCellSize) * gridCellSize
+                    )
+                }
             }
         }
     }
@@ -121,31 +125,67 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        var touchLocations: [CGPoint] = []
         
         for touch in touches{
-            
             touchLocation = touch.location(in: self)
-            
-            if(!currentStatus.isVectorCreating) {
-                let previousLocation = touch.previousLocation(in: self)
+            touchLocations.append(touch.location(in: self))
+        }
+        
+        for touch in touches{
+            if touchLocations.count < 2 {
                 
-                camera?.position.x -= touchLocation.x - previousLocation.x
-                camera?.position.y -= touchLocation.y - previousLocation.y
-                
-                cameraCenter.position = camera?.position ?? .zero
-                
-                moveVector()
-                
-                redrawCenterLine()
-                redrawVectorLine()
-            } else {
-                endOfVector = CGPoint(
-                    x: round(touchLocation.x / gridCellSize) * gridCellSize,
-                    y: round(touchLocation.y / gridCellSize) * gridCellSize
-                )
-                redrawVectorLine()
+                if(!currentStatus.isVectorCreating) {
+                    let previousLocation = touch.previousLocation(in: self)
+                    
+                    camera?.position.x -= touchLocation.x - previousLocation.x
+                    camera?.position.y -= touchLocation.y - previousLocation.y
+                    
+                    cameraCenter.position = camera?.position ?? .zero
+                    
+                    moveVector()
+                    
+                    redrawCenterLine()
+                    redrawVectorLine()
+                } else {
+                    endOfVector = CGPoint(
+                        x: round(touchLocation.x / gridCellSize) * gridCellSize,
+                        y: round(touchLocation.y / gridCellSize) * gridCellSize
+                    )
+                    redrawVectorLine()
+                }
             }
         }
+        
+        if(touchLocations.count > 1){
+            let p1 = touchLocations[0]
+            let p2 = touchLocations[1]
+            
+            let currentlengthBetweenTouches = startLengthBetweenTouches - CGFloat(sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2)))
+            
+            let difference = floor(lengthBetweenTouches - currentlengthBetweenTouches)
+            if isMultiTouch {
+                if(difference > 0) {
+                    print("-zooming", difference)
+                    cameraNode.xScale += difference / 2000 
+                    cameraNode.yScale += difference / 2000
+                } else{
+                    print("+zooming", difference)
+                    if(cameraNode.xScale > 0.1) {
+                        cameraNode.xScale += difference / 2000
+                        cameraNode.yScale += difference / 2000
+                    }
+                }
+            }
+            
+            isMultiTouch = true
+            lengthBetweenTouches = currentlengthBetweenTouches
+
+            
+            
+            
+        }
+        
         
     }
 
@@ -155,6 +195,9 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
         for touch in touches{
             
             touchLocation = touch.location(in: self)
+
+            lengthBetweenTouches = 0
+            isMultiTouch = false
             
             if(!currentStatus.isVectorCreating) {
                 
@@ -180,6 +223,10 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
 //MARK: - didMove
 extension VectorsScene {
     override func didMove(to view: SKView) {
+        if let view = self.view {
+            view.isMultipleTouchEnabled = true
+        }
+        
         let screenSize: CGSize = self.size
 //        backgroundColor = UIColor(red: 0.08, green: 0.3, blue: 0.6, alpha: 1)
         backgroundColor = UIColor(red: 0.08, green: 0.34, blue: 0.88, alpha: 1)
@@ -342,7 +389,6 @@ extension VectorsScene {
             let length1 = sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2))
             let length2 = sqrt(pow((p3.x - p1.x), 2) + pow((p3.y - p1.y), 2))
             let length = length1 + length2
-            print(length)
             return length
                         
         }
@@ -435,8 +481,8 @@ extension VectorsScene {
 
         let lengthToStart = sqrt(pow((P2.x - P1.x), 2) + pow((P2.y - P1.y), 2))
 
-        cameraNode.xScale = 1 + lengthToStart / 2500
-        cameraNode.yScale = 1 + lengthToStart / 2500
+//        cameraNode.xScale = 1 + lengthToStart / 2500
+//        cameraNode.yScale = 1 + lengthToStart / 2500
 
         centerToCameraLine.alpha = lengthToStart / 1000
         centerToCameraLine.lineWidth = 1 + lengthToStart / 1000
@@ -503,11 +549,9 @@ extension VectorsScene {
 extension VectorsScene {
     func findAndSelectVector(near here:CGPoint){
         
-        print("checking...")
         let chosenVector: Memory.Vector = findVector(of: viewModel!.vectors, near: here) ?? Memory.Vector(id: -1, start: .zero, end: .zero, color: .black)
         
         if(chosenVector.id >= 0) {
-            print(chosenVector.id)
             
             viewModel!.choose(chosenVector)
             self.chosenVector = chosenVector
