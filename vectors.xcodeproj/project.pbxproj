@@ -70,7 +70,6 @@
 			isa = PBXGroup;
 			children = (
 				CE12350E2927D54F00C969BF /* App.swift */,
-				CE1E2E89292AA117006727A5 /* AppModel.swift */,
 				CE45318E292BF563006FB05D /* AppController.swift */,
 				CEE17FD8292D375900C6BA24 /* View */,
 				CEF739F6292AC8F7000204D5 /* Extentions */,
@@ -110,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				CEBCF305292FF7AE0050CA06 /* VectorData.xcdatamodeld */,
+				CE1E2E89292AA117006727A5 /* AppModel.swift */,
 				CEBC400229303E7B00B4A648 /* DataController.swift */,
 			);
 			path = DataModel;
@@ -337,7 +337,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,7 +365,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

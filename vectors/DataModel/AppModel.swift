@@ -24,6 +24,18 @@ struct Memory{//Memory of Vectors game
     
     mutating func add(_ vector: Vector) {
         vectors.append(vector)
+        
+        let newVector = VectorModel(
+            id: vector.id,
+            startX: Int(vector.start.x),
+            endX: Int(vector.end.x),
+            startY: Int(vector.start.y),
+            endY: Int(vector.end.y),
+            color: vector.color,
+            chosen: vector.chosen
+        )
+        
+        VectorAsData.lastVector = newVector
     }
     
     mutating func choose(_ vector: Vector) {

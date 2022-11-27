@@ -3,11 +3,26 @@ import SpriteKit
 import CoreData
 
 class VectorsScene: SKScene, UIGestureRecognizerDelegate {
-    @Environment (\.managedObjectContext) var moc
+    var currentStatus: Bool = false
     
-    @Binding var currentStatus: GameStatus
+    var isLandscape: Bool = false
     
-    var selectedNodes:[UITouch:SKSpriteNode] = [:]
+    var vectors: [Memory.Vector] = []
+    
+    func set(_ isLandscape: Bool) {
+        self.isLandscape = isLandscape
+    }
+    
+    func addVectors(_ vectors:[Memory.Vector]) {
+        self.vectors = vectors
+    }
+    
+    func setStatus(_ status:Bool) {
+        self.currentStatus = status
+    }
+
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     var touchLocation: CGPoint = .zero
     var isMultiTouch: Bool = false
@@ -39,18 +54,14 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     var currentVectorLineShapeArray = [SKShapeNode()]
     var currentVectorTriangleShapeArray = [SKShapeNode()]
     
-    init(_ status: Binding<GameStatus>) {
-        _currentStatus = status
+    override init() {
         super.init(size: CGSize(
             width: UIScreen.main.bounds.width * 2,
             height: UIScreen.main.bounds.height * 2))
-        self.scaleMode = .fill
-        
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
-        _currentStatus = .constant(.enableCamera)
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -58,6 +69,16 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
+        if isLandscape {
+            self.size = CGSize(
+                width: UIScreen.main.bounds.width * 2,
+                height: UIScreen.main.bounds.height * 2)
+        } else {
+            self.size = CGSize(
+                width: UIScreen.main.bounds.width * 2,
+                height: UIScreen.main.bounds.height * 2)
+        }
         
         let halfGridCellSize = gridCellSize / 2
         let speed = 0.5
@@ -75,7 +96,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
          if sender.state == .began {
              isLongPress = true
              
-             if(!currentStatus.isVectorCreating){
+             if(!currentStatus){
                  vectorLine.alpha = 1
                  findAndSelectVector(near: touchLocation)
                  moveVector()
@@ -87,7 +108,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
              isLongPress = false
              vectorLine.alpha = 1
              
-             if(currentStatus.isVectorCreating){
+             if(currentStatus){
                  createNewVector()
              }
          }
@@ -108,7 +129,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
         if touchLocations.count < 2 {
             for touch in touches{
 
-                if(currentStatus.isVectorCreating) {
+                if(currentStatus) {
                     vectorCircle.position = touchLocation
                     vectorCircle.alpha = 1
                     vectorLine.alpha = 1
@@ -135,7 +156,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
         for touch in touches{
             if touchLocations.count < 2 {
                 
-                if(!currentStatus.isVectorCreating) {
+                if(!currentStatus) {
                     let previousLocation = touch.previousLocation(in: self)
                     
                     camera?.position.x -= touchLocation.x - previousLocation.x
@@ -163,25 +184,27 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
             
             let currentlengthBetweenTouches = startLengthBetweenTouches - CGFloat(sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2)))
             
-            let difference = floor(lengthBetweenTouches - currentlengthBetweenTouches)
+            let difference = currentlengthBetweenTouches - lengthBetweenTouches
             if isMultiTouch {
-                if(difference > 0) {
-                    print("-zooming", difference)
-                    cameraNode.xScale += difference / 2000 
-                    cameraNode.yScale += difference / 2000
-                } else{
+                if(difference < 0) {
                     print("+zooming", difference)
-                    if(cameraNode.xScale > 0.1) {
-                        cameraNode.xScale += difference / 2000
-                        cameraNode.yScale += difference / 2000
+                    if(cameraNode.xScale >= 0.1) {
+                        cameraNode.xScale += (difference / 1300) / xScale
+                        cameraNode.yScale += (difference / 1300) / xScale
+                    }else{
+                        cameraNode.xScale = 0.1
+                        cameraNode.yScale = 0.1
                     }
+                } else{
+                    print("-zooming", difference)
+                    cameraNode.xScale += (difference / 1300) / xScale
+                    cameraNode.yScale += (difference / 1300) / xScale
+
                 }
             }
             
             isMultiTouch = true
             lengthBetweenTouches = currentlengthBetweenTouches
-
-            
             
             
         }
@@ -199,7 +222,7 @@ class VectorsScene: SKScene, UIGestureRecognizerDelegate {
             lengthBetweenTouches = 0
             isMultiTouch = false
             
-            if(!currentStatus.isVectorCreating) {
+            if(!currentStatus) {
                 
                 if(chosenVector.id != -1) {
                     viewModel?.moveVector(chosenVector, to: startOfVector, endOfVector)
@@ -521,10 +544,11 @@ extension VectorsScene {
             end: endOfVector,
             color: UIColor.random
         )
-        
+
         vectorCircle.alpha = 0
         vectorLine.alpha = 0
         viewModel!.addVector(newVector)
+        
         updateVectors()
     }
 }

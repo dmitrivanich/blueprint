@@ -31,8 +31,6 @@ class VectorsGame: ObservableObject{
     }
     
     @Published private(set) var model: Memory = createMemoryGame()
-
-
     
     var vectors: [Memory.Vector] {
         return model.vectors
